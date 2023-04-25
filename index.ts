@@ -28,14 +28,19 @@ class TreeStore implements TreeStoreFactory {
 
   getAllChildren(id: ID) {
     const rootChildren = this.getChildren(id)
-    const allChildren = rootChildren || []
+    const root = this.getItem(id)
+    const allChildren = root ? [root, ...rootChildren] : []
 
     const stack = [...rootChildren]
 
     while (stack.length) {
       const item = stack.pop()
       if (this._parentMap.has(item!.id)) {
-        allChildren.push(...(this._parentMap.get(item!.id) || []))
+        const children = this._parentMap.get(item!.id)
+        if (children?.length) {
+          stack.push(...children)
+          allChildren.push(...children)
+        }
       }
     }
 
@@ -70,16 +75,7 @@ const items = [
 const ts = new TreeStore(items)
 
 // --- test
-console.log(ts.getAll())
-console.log(ts.getItem(4))
-console.log(ts.getChildren(2))
-console.log(ts.getAllChildren(2))
-console.log(ts.getAllParents(4))
-
-console.log(ts.getItem(99))
-console.log(ts.getChildren(99))
-console.log(ts.getAllChildren(99))
-console.log(ts.getAllParents(99))
+console.log(ts.getAllChildren(1))
 
 // ---- typing
 type ID = number | string

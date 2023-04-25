@@ -31,12 +31,17 @@ var TreeStore = /** @class */ (function () {
     };
     TreeStore.prototype.getAllChildren = function (id) {
         var rootChildren = this.getChildren(id);
-        var allChildren = rootChildren || [];
+        var root = this.getItem(id);
+        var allChildren = root ? __spreadArray([root], rootChildren, true) : [];
         var stack = __spreadArray([], rootChildren, true);
         while (stack.length) {
             var item = stack.pop();
             if (this._parentMap.has(item.id)) {
-                allChildren.push.apply(allChildren, (this._parentMap.get(item.id) || []));
+                var children = this._parentMap.get(item.id);
+                if (children === null || children === void 0 ? void 0 : children.length) {
+                    stack.push.apply(stack, children);
+                    allChildren.push.apply(allChildren, children);
+                }
             }
         }
         return allChildren;
@@ -64,12 +69,4 @@ var items = [
 ];
 var ts = new TreeStore(items);
 // --- test
-console.log(ts.getAll());
-console.log(ts.getItem(4));
-console.log(ts.getChildren(2));
-console.log(ts.getAllChildren(2));
-console.log(ts.getAllParents(4));
-console.log(ts.getItem(99));
-console.log(ts.getChildren(99));
-console.log(ts.getAllChildren(99));
-console.log(ts.getAllParents(99));
+console.log(ts.getAllChildren(1));
