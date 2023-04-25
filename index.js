@@ -69,4 +69,12 @@ var items = [
 ];
 var ts = new TreeStore(items);
 // --- test
-console.log(ts.getAllChildren(1));
+console.log(ts.getAll());
+console.log(ts.getItem(4));
+console.log(ts.getChildren(4));
+console.log(ts.getAllChildren(4));
+console.log(ts.getAllParents(4));
+console.log(ts.getItem(99));
+console.log(ts.getChildren(99));
+console.log(ts.getAllChildren(99));
+console.log(ts.getAllParents(99));
